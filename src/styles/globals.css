@@ -1,3 +1,93 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Poor+Story&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+body > div {
+  height: 100vh;
+}
+
+@layer utilities {
+  .medieval-font {
+    font-family: 'Poor Story', system-ui;
+  }
+  .golden-gradient {
+    background: radial-gradient(
+        ellipse farthest-corner at right bottom,
+        #fedb37 0%,
+        #fdb931 8%,
+        #9f7928 30%,
+        #8a6e2f 40%,
+        transparent 80%
+      ),
+      radial-gradient(
+        ellipse farthest-corner at left top,
+        #ffffff 0%,
+        #ffffac 8%,
+        #d1b464 25%,
+        #5d4a1f 62.5%,
+        #5d4a1f 100%
+      );
+  }
+
+  .medieval-button {
+    padding: 10px 20px;
+    background-color: #795649;
+    color: #f4e5c3;
+    border: 2px solid #c0a080;
+    font-family: "Goudy Bookletter 1911", serif;
+    font-size: 18px;
+    text-shadow: 1px 1px 0px #a67c52;
+    box-shadow: 2px 2px 0px #a67c52;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .medieval-button:hover {
+    background-color: #8a6e2f;
+    box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.3);
+  }
+
+  .medieval-button:active {
+    box-shadow: inset 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
+    transform: translateY(2px);
+  }
+  
+  .medieval-menu {
+    background-color: #162825;
+    list-style: none;
+  }
+
+  .medieval-menu li {
+    margin-bottom: 10px;
+    border-radius: 4px;
+    transition:
+      background-color 0.3s ease,
+      box-shadow 0.2s ease;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .medieval-menu a {
+    text-decoration: none;
+    color: #af9567;
+    display: block;
+    padding: 10px 20px;
+    transition: color 0.3s ease;
+    font-family: 'Poor Story', system-ui;
+    font-size: 16px;
+  }
+
+  .medieval-menu li:hover {
+    background-color: #4f4334;
+  }
+
+  .medieval-menu li:active {
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .medieval-menu li:hover a {
+    color: #af9567;
+  }
+}
