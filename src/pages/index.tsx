@@ -1,79 +1,77 @@
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
+import { useSessionGuard } from "~/utils/sessionGuard";
+
+interface Char {
+  id: number;
+  name: string;
+  level: number;
+  experience: number;
+  points: number;
+  pkPoints: number;
+  isDead: boolean;
+  mapId: number;
+  userId: number;
+  classId: number;
+}
+
+import { api } from "~/utils/api";
 
 export default function Home() {
   const [collapsedSkills, setCollapsedSkills] = useState(true);
-  const characters = [
-    {
-      name: "Rouge",
-      emoji: "🏹",
-      level: 99,
-      image: "/rouge.png",
-    },
-    {
-      name: "Druid",
-      emoji: "🐻",
-      level: 99,
-      image: "/druid.png",
-    },
-    {
-      name: "Mage",
-      emoji: "🧙‍♂️",
-      level: 89,
-      image: "/mage.png",
-    },
-    {
-      name: "Warrior",
-      emoji: "🛡️",
-      level: 99,
-      image: "/warrior.png",
-    },
-  ];
+
+  useSessionGuard();
+
+  const characters: Char[] = api.character.getChars.useQuery().data ?? [];
 
   return (
     <main className="flex h-full w-full gap-2 bg-[#152724]">
       <div className="flex h-full w-full gap-2 bg-[#152724] ">
-        <div className="golden-gradient p-2 hidden w-fit sm:block">
+        <div className="golden-gradient hidden w-fit p-2 sm:block">
           <Image
             src="/rouge.png"
             alt="Logo"
             width={0}
             height={0}
             sizes="100vw"
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
           />
         </div>
         <div className="flex w-full flex-col justify-between bg-[#1D2F2C]">
           <div className="golden-gradient w-full rounded-sm p-1">
             <div className="bg-[#2C534B]">
-              <h1 className="text-2xl font-bold text-white p-2 medieval-font" onClick={() => setCollapsedSkills(!collapsedSkills)}>Personagens</h1>
-              <ul className={`medieval-menu w-full overflow-y-auto ${collapsedSkills ? '' : 'hidden'}`}>
+              <h1
+                className="medieval-font p-2 text-2xl font-bold text-white"
+                onClick={() => setCollapsedSkills(!collapsedSkills)}
+              >
+                Personagens
+              </h1>
+              <ul
+                className={`medieval-menu w-full overflow-y-auto ${collapsedSkills ? "" : "hidden"}`}
+              >
                 <li>
                   <a>Novo Jogo</a>
                 </li>
-                {characters.map((character, index) => (
-                  <li key={index}>
-                    <a>
-                      {character.emoji} {character.name} Lv: {character.level}
-                    </a>
+                {characters.map((char: Char) => (
+                  <li key={char.id}>
+                    <a>{char.name}</a>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
-          <div className="golden-gradient p-1 w-full bg-[#2C534B]">
+          <div className="golden-gradient w-full bg-[#2C534B] p-1">
             <div className="bg-[#2C534B]">
-              <h1 className="text-2xl font-bold text-white p-2 medieval-font">Ações</h1>
+              <h1 className="medieval-font p-2 text-2xl font-bold text-white">
+                Ações
+              </h1>
               <ul className="medieval-menu w-full overflow-y-auto">
                 <li>
-                  <a>
-                      Personagem
-                  </a>
+                  <a>Personagem</a>
                 </li>
                 <li>
-                  <a>
-                      Inventario
-                  </a>
+                  <a>Inventario</a>
                 </li>
                 <li>
                   <a>
@@ -93,71 +91,98 @@ export default function Home() {
               </ul>
             </div>
           </div>
-          <div className="golden-gradient p-1 w-full bg-[#2C534B]">
+          <div className="golden-gradient w-full bg-[#2C534B] p-1">
             <div className="bg-[#2C534B]">
-            <h1 className="text-2xl font-bold text-white p-2 medieval-font" onClick={() => setCollapsedSkills(!collapsedSkills)}>Skills</h1>
-            <ul className={`medieval-menu w-full overflow-y-auto ${collapsedSkills ? 'hidden' : ''}`}>
-              <li>
+              <h1
+                className="medieval-font p-2 text-2xl font-bold text-white"
+                onClick={() => setCollapsedSkills(!collapsedSkills)}
+              >
+                Skills
+              </h1>
+              <ul
+                className={`medieval-menu w-full overflow-y-auto ${collapsedSkills ? "hidden" : ""}`}
+              >
+                <li>
                   <a>Apunhalhar 🗡️ [1] </a>
-              </li>
-              <li>
-                <a>
-                  Saraivada de flechas 🏹 [2]
-                </a>
-              </li>
-              <li>
-                <a>
-                  Punhal venenoso 🗡️ [3]
-                </a>
-              </li>
-              <li>
-                <a>
-                  Furtividade 🗡️ [4]
-                </a>
-              </li>
-            </ul>
+                </li>
+                <li>
+                  <a>Saraivada de flechas 🏹 [2]</a>
+                </li>
+                <li>
+                  <a>Punhal venenoso 🗡️ [3]</a>
+                </li>
+                <li>
+                  <a>Furtividade 🗡️ [4]</a>
+                </li>
+              </ul>
             </div>
           </div>
-          <div className="w-full bg-[#152724] grow flex flex-col gap-1 justify-end pb-4">
-            <h1 className="text-2xl font-bold text-white p-2 bg-[#2C534B] medieval-font">Dados</h1>
-            <div className="bg-red-600 text-white text-md rounded-md text-center medieval-font">100/100</div>
-            <div className="bg-blue-600 text-white text-md rounded-md text-center medieval-font">100/100</div>
-            <div className="bg-orange-300 text-white text-md rounded-md text-center medieval-font">100/100</div>
+          <div className="flex w-full grow flex-col justify-end gap-1 bg-[#152724] pb-4">
+            <h1 className="medieval-font bg-[#2C534B] p-2 text-2xl font-bold text-white">
+              Dados
+            </h1>
+            <div className="text-md medieval-font rounded-md bg-red-600 text-center text-white">
+              100/100
+            </div>
+            <div className="text-md medieval-font rounded-md bg-blue-600 text-center text-white">
+              100/100
+            </div>
+            <div className="text-md medieval-font rounded-md bg-orange-300 text-center text-white">
+              100/100
+            </div>
           </div>
         </div>
       </div>
       <div className="flex w-full flex-col gap-2 bg-[#152724]">
-        <div className="w-full golden-gradient rounded-lg">
+        <div className="golden-gradient w-full rounded-lg">
           <Image
-              src="/Valdheim.png"
-              alt="Logo"
-              width={0}
-              height={0}
-              sizes="100vw"
-              className="w-full h-full object-cover p-2 rounded-xl"
-            />
+            src="/Valdheim.png"
+            alt="Logo"
+            width={0}
+            height={0}
+            sizes="100vw"
+            className="h-full w-full rounded-xl object-cover p-2"
+          />
         </div>
-        <div className="w-full h-full rounded-lg flex flex-row">
-          <div className="w-full h-full border-r-2 border-[#af9567]">
-            <h2 className="text-2xl text-[#af9567] p-2 medieval-font">História</h2>
+        <div className="flex h-full w-full flex-row rounded-lg">
+          <div className="h-full w-full border-r-2 border-[#af9567]">
+            <h2 className="medieval-font p-2 text-2xl text-[#af9567]">
+              História
+            </h2>
             <ul className="medieval-menu w-full overflow-y-auto">
               <li>
                 <a>
-                  <div className="flex justify-around w-full h-full">
-                    <Image src="/coin.png" alt="Logo" width={0} height={0} sizes="100vw" className="w-10 h-10 object-cover" />
+                  <div className="flex h-full w-full justify-around">
+                    <Image
+                      src="/coin.png"
+                      alt="Logo"
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      className="h-10 w-10 object-cover"
+                    />
                     <div className="m-auto">Encontre o Lobo cinzento [4h]</div>
                   </div>
                 </a>
               </li>
             </ul>
           </div>
-          <div className="w-full h-full">
-            <h2 className="text-2xl text-[#af9567] p-2 medieval-font">Caçada</h2>
+          <div className="h-full w-full">
+            <h2 className="medieval-font p-2 text-2xl text-[#af9567]">
+              Caçada
+            </h2>
             <ul className="medieval-menu w-full overflow-y-auto">
               <li>
                 <a>
-                  <div className="flex justify-around w-full h-full">
-                    <Image src="/coin-1.png" alt="Logo" width={0} height={0} sizes="100vw" className="w-10 h-10 object-cover" />
+                  <div className="flex h-full w-full justify-around">
+                    <Image
+                      src="/coin-1.png"
+                      alt="Logo"
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      className="h-10 w-10 object-cover"
+                    />
                     <div className="m-auto">Mate 20 gremilins</div>
                   </div>
                 </a>

@@ -19,7 +19,7 @@ import { db } from "~/server/db";
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
-      id: string;
+      id: number;
       // ...other properties
       // role: UserRole;
     };
