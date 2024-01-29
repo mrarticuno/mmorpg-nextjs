@@ -6,7 +6,7 @@ export default function Login() {
   const router = useRouter();
 
   if (sessionData) {
-    void router.push("/index");
+    void router.push("/");
   }
 
   return (

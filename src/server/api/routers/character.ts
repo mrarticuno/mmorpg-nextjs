@@ -8,6 +8,9 @@ export const characterRouter = createTRPCRouter({
       where: {
         userId: ctx.session.user.id,
       },
+      include: {
+        class: true,
+      },
     });
 
     return chars.sort((a, b) => a.level - b.level);
@@ -28,8 +31,16 @@ export const characterRouter = createTRPCRouter({
       return ctx.db.character.create({
         data: {
           name: input.name,
-          classId: input.classId,
-          userId: ctx.session.user.id,
+          class: {
+            connect: {
+              id: input.classId,
+            },
+          },
+          user: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
           charStats: {
             create: {},
           },

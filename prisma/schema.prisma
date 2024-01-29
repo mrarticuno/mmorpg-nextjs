@@ -16,7 +16,7 @@ datasource db {
 
 // Necessary for Next auth
 model Account {
-    id                Int      @id @default(autoincrement())
+    id                Int     @id @default(autoincrement())
     type              String
     provider          String
     providerAccountId String
@@ -28,8 +28,8 @@ model Account {
     id_token          String? // @db.Text
     session_state     String?
 
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId            Int
+    user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId Int
 
     @@unique([provider, providerAccountId])
 }
@@ -39,20 +39,20 @@ model Session {
     sessionToken String   @unique
     expires      DateTime
 
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId       Int
+    user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId Int
 }
 
 model User {
-    id            Int      @id @default(autoincrement())
+    id            Int       @id @default(autoincrement())
     name          String?
     email         String?   @unique
     emailVerified DateTime?
     image         String?
 
-    accounts      Account[]
-    sessions      Session[]
-    characters    Character[]
+    accounts   Account[]
+    sessions   Session[]
+    characters Character[]
 }
 
 model VerificationToken {
@@ -65,74 +65,75 @@ model VerificationToken {
 
 // MMORPG Models
 model Skill {
-    id Int @id @default(autoincrement())
-    name String @unique
+    id          Int    @id @default(autoincrement())
+    name        String @unique
     description String
-    emoji String
-    manaCost Int @default(1)
-    level Int @default(1)
-    DPS Int @default(0)
-    defense Int @default(0)
-    health Int @default(0)
-    RNG Int @default(0)
+    emoji       String
+    manaCost    Int    @default(1)
+    level       Int    @default(1)
+    DPS         Int    @default(0)
+    defense     Int    @default(0)
+    health      Int    @default(0)
+    RNG         Int    @default(0)
 
-    class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+    class   Class @relation(fields: [classId], references: [id], onDelete: Cascade)
     classId Int
 
     characters CharSkill[]
 }
 
 model Class {
-    id Int @id @default(autoincrement())
-    name String @unique
-    emoji String
+    id          Int    @id @default(autoincrement())
+    name        String @unique
+    image       String @default("/warrior.png")
+    emoji       String
     description String
 
     characters Character[]
-    skills Skill[]
+    skills     Skill[]
 }
 
 model CharStats {
-    id Int @id @default(autoincrement())
-    strength Int @default(1)
-    agility Int @default(1)
-    faith Int @default(1)
+    id           Int @id @default(autoincrement())
+    strength     Int @default(1)
+    agility      Int @default(1)
+    faith        Int @default(1)
     intelligence Int @default(1)
-    luck Int @default(1)
-    DPS Int @default(1)
-    defense Int @default(1)
-    health Int @default(50)
-    mana Int @default(10)
-    stamina Int @default(100)
+    luck         Int @default(1)
+    DPS          Int @default(1)
+    defense      Int @default(1)
+    health       Int @default(50)
+    mana         Int @default(10)
+    stamina      Int @default(100)
 
-    character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
-    characterId Int @unique
+    character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+    characterId Int       @unique
 }
 
 model Item {
-    id Int @id @default(autoincrement())
-    name String @unique
+    id          Int    @id @default(autoincrement())
+    name        String @unique
     description String
-    type String
-    level Int @default(1)
-    DPS Int?
-    defense Int?
-    health Int?
-    RNG Int?
+    type        String
+    level       Int    @default(1)
+    DPS         Int?
+    defense     Int?
+    health      Int?
+    RNG         Int?
 
     inventories ItemInventory[]
-    drops MonsterDrop[]
+    drops       MonsterDrop[]
 }
 
 model ItemInventory {
     equipped Boolean @default(false)
-    type String
-    quantity Int @default(1)
+    type     String
+    quantity Int     @default(1)
 
-    item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+    item   Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
     itemId Int
 
-    inventory Inventory @relation(fields: [inventoryId], references: [id], onDelete: Cascade)
+    inventory   Inventory @relation(fields: [inventoryId], references: [id], onDelete: Cascade)
     inventoryId Int
 
     @@id([itemId, inventoryId])
@@ -141,8 +142,8 @@ model ItemInventory {
 model Inventory {
     id Int @id @default(autoincrement())
 
-    character Character @relation(fields: [characterId], references: [id])
-    characterId Int @unique
+    character   Character @relation(fields: [characterId], references: [id])
+    characterId Int       @unique
 
     items ItemInventory[]
 }
@@ -150,117 +151,117 @@ model Inventory {
 model CharSkill {
     level Int @default(1)
 
-    character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+    character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
     characterId Int
 
-    skill Skill @relation(fields: [skillId], references: [id])
+    skill   Skill @relation(fields: [skillId], references: [id])
     skillId Int
 
     @@id([characterId, skillId])
 }
 
 model Monster {
-    id Int @id @default(autoincrement())
-    name String @unique
-    level Int @default(1)
-    health Int @default(1)
-    DPS Int @default(1)
-    defense Int @default(1)
+    id      Int    @id @default(autoincrement())
+    name    String @unique
+    level   Int    @default(1)
+    health  Int    @default(1)
+    DPS     Int    @default(1)
+    defense Int    @default(1)
 
-    map Map @relation(fields: [mapId], references: [id], onDelete: Cascade)
+    map   Map @relation(fields: [mapId], references: [id], onDelete: Cascade)
     mapId Int
 
-    drops MonsterDrop[]
+    drops  MonsterDrop[]
     quests Quest[]
 }
 
 model MonsterDrop {
-    quantity Int @default(1)
+    quantity   Int @default(1)
     dropChance Int @default(100)
 
-    monster Monster @relation(fields: [monsterId], references: [id], onDelete: Cascade)
+    monster   Monster @relation(fields: [monsterId], references: [id], onDelete: Cascade)
     monsterId Int
 
-    item Item @relation(fields: [itemId], references: [id])
+    item   Item @relation(fields: [itemId], references: [id])
     itemId Int
 
     @@id([monsterId, itemId])
 }
 
 model Quest {
-    id Int @id @default(autoincrement())
-    name String @unique
+    id          Int    @id @default(autoincrement())
+    name        String @unique
     description String
-    level Int @default(1)
-    experience Int @default(0)
-    image String @default("/coin.png")
+    level       Int    @default(1)
+    experience  Int    @default(0)
+    image       String @default("/coin.png")
 
-    map Map @relation(fields: [mapId], references: [id], onDelete: Cascade)
+    map   Map @relation(fields: [mapId], references: [id], onDelete: Cascade)
     mapId Int
 
-    monsters Monster[]
+    monsters   Monster[]
     characters CharQuest[]
 }
 
 model CharQuest {
     completed Boolean @default(false)
 
-    character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+    character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
     characterId Int
 
-    quest Quest @relation(fields: [questId], references: [id])
+    quest   Quest @relation(fields: [questId], references: [id])
     questId Int
 
     @@id([characterId, questId])
 }
 
 model Map {
-    id Int @id @default(autoincrement())
-    name String @unique
+    id          Int    @id @default(autoincrement())
+    name        String @unique
     description String
-    level Int @default(1)
+    level       Int    @default(1)
 
-    monsters Monster[]
-    quests Quest[]
+    monsters   Monster[]
+    quests     Quest[]
     characters Character[]
 }
 
 model ExperienceTable {
-    id Int @id @default(autoincrement())
-    level Int @unique
+    id         Int @id @default(autoincrement())
+    level      Int @unique
     experience Int @default(0)
 }
 
 model CharLog {
-    id Int @id @default(autoincrement())
-    message String
+    id        Int      @id @default(autoincrement())
+    message   String
     createdAt DateTime @default(now())
 
-    character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+    character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
     characterId Int
 }
 
 model Character {
-    id Int @id @default(autoincrement())
-    name String @unique
-    level Int @default(1)
-    experience Int @default(0)
-    points Int @default(0)
-    pkPoints Int @default(0)
-    isDead Boolean @default(false)
+    id         Int     @id @default(autoincrement())
+    name       String  @unique
+    level      Int     @default(1)
+    experience Int     @default(0)
+    points     Int     @default(0)
+    pkPoints   Int     @default(0)
+    isDead     Boolean @default(false)
 
-    map Map @relation(fields: [mapId], references: [id], onDelete: SetDefault)
+    map   Map @relation(fields: [mapId], references: [id], onDelete: SetDefault)
     mapId Int @default(1)
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId Int
 
-    class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+    class   Class @relation(fields: [classId], references: [id], onDelete: Cascade)
     classId Int
 
     charStats CharStats?
     inventory Inventory?
-    skills CharSkill[]
-    logs CharLog[]
-    quests CharQuest[]
+    skills    CharSkill[]
+    logs      CharLog[]
+    quests    CharQuest[]
 }
