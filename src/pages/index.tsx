@@ -1,6 +1,5 @@
-import { create } from "zustand";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSessionGuard } from "~/utils/useSessionGuard";
 
 import { api } from "~/utils/api";
@@ -27,65 +26,27 @@ interface Char {
   };
 }
 
-interface StoreState {
-  chars: Char[];
-  selectedChar: Char | undefined;
-  newCharacter: boolean;
-  selectedClass: number;
-  charName: string;
-  collapsedSkills: boolean;
-  setChars: (chars: Char[]) => void;
-  setSelectedChar: (selectedChar: Char | undefined) => void;
-  setNewCharacter: (newCharacter: boolean) => void;
-  setSelectedClass: (selectedClass: number) => void;
-  setCharName: (charName: string) => void;
-  setCollapsedSkills: (collapsedSkills: boolean) => void;
-}
-
-const useStore = create<StoreState>((set) => ({
-  chars: [],
-  selectedChar: undefined,
-  newCharacter: false,
-  selectedClass: -1,
-  charName: "",
-  collapsedSkills: true,
-  setChars: (chars) => set({ chars }),
-  setSelectedChar: (selectedChar) => set({ selectedChar }),
-  setNewCharacter: (newCharacter) => set({ newCharacter }),
-  setSelectedClass: (selectedClass) => set({ selectedClass }),
-  setCharName: (charName) => set({ charName }),
-  setCollapsedSkills: (collapsedSkills) => set({ collapsedSkills }),
-}));
-
 export default function Home() {
+  const [collapsedSkills, setCollapsedSkills] = useState(true);
+  const [chars, setChars] = useState<Char[]>([]);
+  const [selectedChar, setSelectedChar] = useState<Char | undefined>(undefined);
+  const [newCharacter, setNewCharacter] = useState(false);
+  const [selectedClass, setSelectedClass] = useState(-1);
+  const [charName, setCharName] = useState("");
   useSessionGuard();
+
   const characters = api.character.getChars.useQuery();
   const createCharMutation = api.character.create.useMutation();
 
-  const {
-    chars,
-    selectedChar,
-    newCharacter,
-    selectedClass,
-    charName,
-    collapsedSkills,
-    setChars,
-    setSelectedChar,
-    setNewCharacter,
-    setSelectedClass,
-    setCharName,
-    setCollapsedSkills,
-  } = useStore();
-
   useEffect(() => {
     if (characters?.data) {
-      const updatedChars = characters.data as unknown as Char[];
+      const updatedChars = characters.data as Char[];
       setChars(updatedChars);
       if (!selectedChar && updatedChars.length > 0) {
         setSelectedChar(updatedChars[0]);
       }
     }
-  }, [characters, selectedChar, setChars, setSelectedChar]);
+  }, [characters, selectedChar]);
 
   const refreshChars = () => {
     void characters.refetch();
