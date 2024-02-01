@@ -16,15 +16,16 @@ export const characterRouter = createTRPCRouter({
     return chars.sort((a, b) => a.level - b.level);
   }),
   getChar: protectedProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.number())
     .query(async ({ ctx, input }) => {
       const char = await ctx.db.character.findFirst({
         where: {
-          id: input.id,
+          id: { equals: input as number | undefined },
           userId: ctx.session.user.id,
         },
         include: {
           class: true,
+          charStats: true,
         },
       });
 
