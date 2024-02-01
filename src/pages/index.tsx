@@ -40,7 +40,7 @@ export default function Home() {
 
   useEffect(() => {
     if (characters?.data) {
-      const updatedChars = characters.data as Char[];
+      const updatedChars = characters.data as unknown as Char[];
       setChars(updatedChars);
       if (!selectedChar && updatedChars.length > 0) {
         setSelectedChar(updatedChars[0]);

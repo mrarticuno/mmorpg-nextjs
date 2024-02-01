@@ -69,6 +69,7 @@ model Skill {
     name        String @unique
     description String
     emoji       String
+    type        String
     manaCost    Int    @default(1)
     level       Int    @default(1)
     DPS         Int    @default(0)
